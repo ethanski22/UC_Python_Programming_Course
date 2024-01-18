@@ -52,7 +52,7 @@ def two_of_three(a, b, c):
     >>> two_of_three(5, 5, 5)
     50
     """
-    #return sum((x * x + y * y) for x, y in sorted([a, b, c])[-2:])
+    return sum(x**2 for x in sorted([a, b, c])[-2:])
 
 
 #  RQ3
