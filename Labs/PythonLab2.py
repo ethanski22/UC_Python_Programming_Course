@@ -82,13 +82,13 @@ def keeper(pred, n):
     >>> keeper(lambda x: x%7 == 0, 40)
     7 14 21 28 35 
     """
-    "*** YOUR CODE HERE ***"  
-    lst = [i for i in range(1, n - 1)]
-        
-    fil = filter(pred, lst)
-    
-    return fil
-    
+    "*** YOUR CODE HERE ***"      
+    for i in range(1, n):
+        if(pred(i)):
+            # Used end = " " from stackoverflow to print on the 
+            # same line using a for loop
+            print(i, end = " ")
+
 import doctest
 if __name__ == "__main__":
   doctest.testmod(verbose=True)
