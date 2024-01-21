@@ -5,7 +5,7 @@ def egypt(n, d):
     result = []
 
     while n != 0:
-        unitFraction = -(-d // n)  # Ceiling division to find the largest unit fraction
+        unitFraction = -(-d // n)  # Finds the largest unit fraction
         result.append(f"1/{unitFraction}")
         n = n * unitFraction - d
         d = d * unitFraction
