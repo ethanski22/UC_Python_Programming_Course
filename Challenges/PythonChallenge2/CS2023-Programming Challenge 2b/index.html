@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<!-- modified from url=(0037)http://cs61a.org/lab/lab03/index.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="description" content="CS2023 Python Programming">
+  <meta name="author" content="cs2023">
+
+  <meta name="viewport" content="width=device-width">
+
+  <script src="jquery.min.js"></script>
+  <script src="bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="icon" href="favicon.ico">
+
+  <link rel="stylesheet" href="mono-blue.css">
+  <script src="highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="resource.css">
+
+  <link rel="stylesheet" type="text/css" href="lab.css">
+
+
+  <title>Programming Challenge 2 - Game of Hog| CS 2023 </title>
+
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" datar-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">CS 2023 - Python Programming</a>
+        </div>
+
+
+      </div>
+    </nav>
+
+    <div id="content" class="container">
+      <div class='row'>
+        <div class='col-md-9'>
+          <div class='page-header'>
+            <h1><span class="content-title-brand">Module 4 - Programming Challenge 2b</span>: The Game of Hog</h1>
+          </div>
+
+          <div id="haiku">
+
+            <blockquote><p><img class="img-responsive center-block" src="die5.gif" alt="5-sided die"></p>
+
+              <cite>
+                I know! I'll use my<br/>
+                Higher-order functions to<br/>
+                Order higher rolls.
+              </cite></blockquote>
+
+          </div>
+
+          <h2>Introduction</h2>
+
+
+          <p>In this project, you will develop a simulator and multiple strategies
+            for the dice game Hog. You will need to use <em>control statements</em> and
+            <em>higher-order functions</em> together, as described in lecture.
+            
+
+          <p>In Hog, two players alternate turns trying to reach 100 points first.
+            On each turn, the current player chooses some number of dice to roll,
+            up to 10. That player's score for the turn is the sum of the dice
+            outcomes, unless any of the dice comes up a 1, in which case the score
+            for the turn is only 1 point (the <strong>Pig out</strong> rule).</p>
+
+          <p>To spice up the game, we will play with some special rules:</p>
+
+          <ul>
+            <li><p><strong>Free bacon</strong>. A player who chooses to roll zero dice scores one more
+              than the largest digit in the opponent's score.</p>
+
+              <ul>
+                <li><em>Example 1</em>: If Player 1 has 42 points, Player 0 gains 1 + max(4, 2) = 5
+                  points by rolling zero dice.</li>
+                <li><em>Example 2</em>: If Player 1 has 48 points, Player 0 gains 1 + max(4, 8) = 9
+                  points.</li>
+                <li><em>Example 3</em>: If Player 1 has 7 points, Player 0 gains 1 + max(0, 7) = 8
+                  points by rolling zero dice.</li>
+              </ul></li>
+            <li><strong>Hog wild</strong>. If the sum of both players' total scores is a multiple
+              of seven (e.g., 14, 21, 35), then the current player rolls four-sided
+              dice instead of the usual six-sided dice.</li>
+            <li><strong>Swine Swap</strong>. At the end of each turn, if the last two digits of Player 0's
+              score are the reverse of the last two digits of Player 1's score, the players'
+              score will be swapped.
+              <br/>
+
+              <ul>
+                <li><em>Example 1</em>: Player 0 has a score of 19 and Player 1 has a score of
+                  91 after Player 0 has rolled. Reversing the last two digits of Player 0's
+                  score (19) results in 91, which are the last two digits of Player 1's score.
+                  This is considered a swap and the player's scores are switched. Player 0 now
+                  has a score of 91, Player 1 now has a score of 19 and Player 0's turn is over.</li>
+                <li><em>Example 2</em>: Player 0 has a score of 80 and Player 1 has a score of
+                  8 at the end of Player 1's turn. In this example, Player 1's score is viewed
+                  as 08, which is the reverse of 80. The player's scores are swapped, leaving,
+                  Player 0 with 8 and Player 1 with 80.  Player 1's turn ends.</li>
+                <li><em>Example 3</em>: Player 0 begins their turn with a score of 90 while Player 1
+                  has 70 points. Player 0 rolls 7 dice, giving them 17 points. They now
+                  have a score of 107 and Player 1 has a score of 70. Swapping the last two
+                  digits of 107 will give back 70, so the two scores are swapped. Player 0
+                  ends their turn with a score of 70 while Player 1 now has a score of 107.
+                  Because the swap occurs before Player 0's turn is over, Player 1 wins the
+                  game.</li>
+              </ul></li>
+          </ul>
+
+
+          <h2 id="download-starter-files">Download starter files</h2>
+
+
+          <p>To get started, download the 2 files for the project code.</p>
+
+          <ul>
+            <li><a href="./hog.py"> hog.py </a>: A starter implementation of Hog</li>
+            <li><a href ="./dice.py"> dice.py </a>: Functions for rolling dice</li>
+            <br>
+
+
+It is not required, but for those
+              interested in extra credit, you can download the starter file:
+              <li><a href="./hog_extra.py"> hog_extra.py </a>: A starter for extra credit on strategies.
+              </li>
+            </p>
+
+              <p>
+              If you are interested in running the game in a GUI interface there is an <a href= "http://cs61a.org/proj/hog/hog.zip">hog.zip archive </a> with additional files that you can download to make this work.
+            </p>
+            <li><code>hog_gui.py</code>: A graphical user interface for Hog</li>
+            <li><code>images</code>: A directory of images used by <code>hog_gui.py</code></li>
+          </ul>
+
+
+          <h2>Deliverables</h2>
+
+          <p>You will add the doctests, complete the logic code and turn in the modified file <li><code>hog.py</code></li>
+          </ul>
+
+
+          <p>For the functions that we ask you to complete, there may be some
+            initial code that we provide. If you would rather not use that code,
+            feel free to delete it and start from scratch. You may also add new
+            function definitions as you see fit.</p>
+
+          <p>However, please do <b>not</b> modify any other functions.  Doing so may
+            result in your code failing.</p>
+
+          <h2>Testing</h2>
+
+          <p>Throughout this project, you should be and doctests and testing the correctness of your code.  It is good practice to test often, so that it is easy to isolate any problems.</p>
+
+
+
+
+          <p>In the first phase, you will develop a simulator for the game of Hog.</p>
+
+
+          <h3 id="problem-0-0-pt">Problem 0 </h3>
+
+
+          <p>The <code>dice.py</code> file represents dice using non-pure zero-argument
+            functions. These functions are non-pure because they may have
+            different return values each time they are called. The documentation
+            of <code>dice.py</code> describes the two different types of dice used in the
+            project:</p>
+
+          <ul>
+            <li>Dice can be fair, meaning that they produce each possible outcome with equal
+              probability. Examples: <code>four_sided</code>, <code>six_sided</code>.</li>
+            <li>For testing functions that use dice, deterministic test dice always cycle
+              through a fixed sequence of values that are passed as arguments to the
+              <code>make_test_dice</code> function.</li>
+          </ul>
+
+          <p>Before we start writing any code, let's understand the <code>make_test_dice</code>
+            function by testing.</p>
+
+<pre><code>
+$ python3 -i dice.py
+>>> dice = make_test_dice(1, 2, 3)
+>>> dice()
+1
+>>> dice()
+2
+>>> dice()
+3
+>>> dice()
+1
+>>> dice()
+2 </code></pre>
+
+  <h3 id="problem-1-2-pt">Problem 1 </h3>
+
+
+          <p>Implement the <code>roll_dice</code> function in <code>hog.py</code>. It takes two arguments: the
+            number of dice to roll, <code>num_rolls</code>, and a <code>dice</code> function. It returns the
+            number of points scored by rolling that number of dice <strong>simultaneously</strong>: either
+            the sum of the outcomes or 1 (pig out).</p>
+
+          <p>To obtain a single outcome of a dice roll, call <code>dice()</code>. You must
+            call the <code>dice</code> function <em>exactly</em> the number of times specified by
+            the first argument (even if a 1 is rolled) since we are rolling all
+            dice simultaneously in the game.</p>
+
+          <p>Test you code for accurracy interactively as follows:</p>
+
+          <pre><code>
+$ python3 -i hog.py
+>>> roll_dice(1,make_test_dice(4, 2, 1, 3))
+4
+>>> roll_dice(2,make_test_dice(4, 2, 1, 3))
+6
+>>> roll_dice(3,make_test_dice(4, 2, 1, 3))
+1
+>>> roll_dice(4,make_test_dice(4, 2, 1, 3))
+1
+</code></pre>
+
+
+          <p>The <code>roll_dice</code> function has a <a href="http://composingprograms.com/pages/14-designing-functions.html#default-argument-values">default argument value</a>
+            for <code>dice</code> that is a random six-sided dice function. The tests use fixed dice.</p>
+
+
+          <h3 id="problem-2-1-pt">Problem 2 </h3>
+
+
+          <p>Implement the <code>take_turn</code> function, which returns the number of points
+            scored for a turn.  You will need to implement the <em>Free bacon</em> rule.
+            You can assume that <code>opponent_score</code> is less than 100. For a score
+            less than 10, assume that the first of two digits is 0. Your
+            implementation should call <code>roll_dice</code>.</p>
+
+
+          <p> You can check
+            your correctness with:</p>
+
+          <pre><code>
+$ python3 -i hog.py
+>>> take_turn(2, 0, make_test_dice(4, 6, 1))
+10
+>>> take_turn(3, 0, make_test_dice(4, 6, 1))
+1
+>>> take_turn(0, 35)
+6
+>>> take_turn(0, 71)
+8
+>>> take_turn(0, 7)
+8
+>>> take_turn(0, 0)
+1
+>>> take_turn(0, 9)
+10
+>>> take_turn(2, 0, make_test_dice(6))
+12
+>>> take_turn(0, 50)
+6</code></pre>
+
+
+          <h3 id="problem-3-1-pt">Problem 3</h3>
+
+
+          <p>Implement the <code>select_dice</code> function, which helps enforce the <em>Hog
+            wild</em> special rule. This function takes four arguments: the scores for
+            the current and opposing players, and the two types of dice. It returns either <code>four_sided</code> or
+            <code>six_sided</code> dice that will be used during the turn.</p>
+
+          <p>Run the following tests:</p>
+
+          <pre><code>
+$ python3 -i hog.py
+>>> select_dice(4, 24, four_sided, six_sided) == four_sided
+True
+>>> select_dice(16, 64, four_sided, six_sided) == four_sided
+False
+>>> select_dice(0, 0, four_sided, six_sided) == four_sided
+True
+>>> select_dice(50, 80, four_sided, six_sided) == four_sided
+False          </code></pre>
+
+
+
+          <h3 id="problem-4-1-pt">Problem 4 </h3>
+
+
+          <p>To help you implement the <em>Swine Swap</em> special rule, write a function called <code>is_swap</code> that checks to see if the last two digits of the players' scores are swapped.</p>
+
+          <p>Run the following tests:</p>
+
+          <pre><code>
+$ python3 -i hog.py
+>>> is_swap(19, 91)
+True
+>>> is_swap(20, 40)
+False
+>>> is_swap(41, 14)
+True
+>>> is_swap(23, 42)
+False
+>>> is_swap(55, 55)
+True
+>>> is_swap(114, 41) # We check the last two digits
+True
+          </code></pre>
+
+
+
+          <h3 id="problem-5-3-pt">Problem 5 </h3>
+
+
+          <p>Implement the <code>play</code> function, which simulates a full game of
+            Hog. Players alternate turns, each using their respective strategy function
+            (Player 0 uses strategy0, etc.), until one of the players reaches the <code>goal</code>
+            score. When the game ends, <code>play</code> returns the final total scores of both players,
+            with Player 0's score first, and Player 1's score second.</p>
+
+          <p>Here are some hints:</p>
+
+          <ul>
+            <li>Remember to enforce all the special rules! You should enforce the
+              <em>Hog wild</em> special rule here (by calling <code>select_dice</code>), as well as
+              the <em>Swine Swap</em> special rule here.</li>
+            <li>You should use the <code>take_turn</code> and <code>is_swap</code> functions that you've already written.</li>
+            <li>You can get the number of the other player (either 0 or 1) by calling
+              the provided function <code>other</code>.</li>
+            <li>A <em>strategy</em> is a function that, given a player's score and their opponent's
+              score, returns how many dice the player wants to roll. A strategy
+              function (such as <code>strategy0</code> and <code>strategy1</code>) takes two arguments:
+              scores for the current player and opposing player. A strategy
+              function returns the number of dice that the current player wants to
+              roll in the turn. Don't worry about details of implementing
+              strategies yet. You will develop them in the Extra-Credit Phase 2.</li>
+          </ul>
+
+          <p>Test your solution using the following tests:</p>
+
+          <pre><code>
+$ python3 -i hog.py
+>>> four_sided = make_test_dice(1)
+>>> six_sided = make_test_dice(3)
+>>> always = always_roll
+>>> s0,s1 = play(always(5), always(3), four_sided, six_sided, score0=91, score1=10)
+>>> s0, s1
+(106, 10)
+
+>>> s0,s1 = play(always(5), always(5), four_sided, six_sided, goal=10)
+>>> s0, s1
+(1, 15)
+
+>>> s0,s1 = play(always(5), always(3), four_sided, six_sided, score0=36, score1=15, goal=50)
+>>> s0, s1
+(15, 51)
+
+>>> # Swine swap applies to 3 digit scores
+>>> s0,s1 = play(always(5), always(3), four_sided, six_sided, score0=98, score1=31)
+>>> s0,s1
+(31, 113)
+
+>>> # Goal edge case
+>>> s0,s1 = play(always(4), always(3), four_sided, six_sided, score0=88, score1=20)
+>>> s0, s1
+(100, 20)
+          </code></pre>
+
+
+
+          <blockquote><p><strong>Note</strong>: that you can <em>fuzz test</em>, which checks your
+            <code>play</code> function works for any arbitrary inputs. Failing this test means
+            something is wrong, but you should look at other tests to see where the
+            problem might be.</p></blockquote>
+
+          <code><pre>
+$ python3 -i hog.py
+>>> import random
+>>> four_sided = lambda: random.randrange(1, 5)
+>>> six_sided = lambda: random.randrange(1, 7)
+>>> random_strat = lambda a, b: (random.randrange(11) + b) % 10
+>>> random.seed(4321)
+>>> for _ in range(100):
+       s0, s1 = play(random_strat,random_strat, four_sided, six_sided)
+            </code></pre>
+          <p>Once you are finished, you will be able to play a graphical version of
+            the game. We have provided a link to a zip archive that contains a file called <code>hog_gui.py</code> that
+            you can run from the terminal:</p>
+
+          <pre><code>python3 hog_gui.py</code></pre>
+
+          <p>If you don't already have Tkinter (Python's graphics library)
+            installed, you'll need to install it first before you can run the GUI.</p>
+
+          <p>The GUI relies on your implementation, so if you have any bugs in your
+            code, they will be reflected in the GUI. This means you can also use
+            the GUI as a debugging tool; however, it's better to run the tests
+            first.</p>
+
+          <p>Congratulations! You have finished this project!
+
+          Go on to the Extra Credit Questions if you are so inclined.</p>
+
+
+          <h2 id="phase-2-strategies">Extra Credit: Strategies</h2>
+
+
+          <p>In the second phase, you will experiment with ways to improve upon the
+            basic strategy of always rolling a fixed number of dice. First, you need to
+            develop some tools to evaluate strategies.</p>
+
+
+          <h3 id="problem-6-2-pt">Problem 6 </h3>
+
+
+          <p>Implement the <code>make_averaged</code> function, which is a higher-order function that
+            takes a function <code>fn</code> as an argument. It returns another function that takes
+            the same number of arguments as <code>fn</code> (the function originally passed into
+            <code>make_averaged</code>). This returned function differs from the input function in that
+            it returns the average value of repeatedly calling <code>fn</code> on the same arguments.
+            This function should call <code>fn</code> a total of <code>num_samples</code> times and return the
+            average of the results.</p>
+
+          <p>To implement this function, you need a new piece of Python syntax! You
+            must write a function that accepts an arbitrary number of arguments,
+            then calls another function using exactly those arguments. Here's how
+            it works.</p>
+
+          <p>Instead of listing formal parameters for a function, we write <code>*args</code>. This is often called a "rest agument", since it is used to capture a list of the unknown number of all the rest of the arguments.
+            To call another function using exactly those arguments, we call it
+            again with <code>*args</code>. For example,</p>
+
+          <pre><code>&gt;&gt;&gt; def printed(fn):
+...     def print_and_return(*args):
+...         result = fn(*args)
+...         print(&#x27;Result:&#x27;, result)
+...         return result
+...     return print_and_return
+&gt;&gt;&gt; printed_pow = printed(pow)
+&gt;&gt;&gt; printed_pow(2, 8)
+Result: 256
+256
+&gt;&gt;&gt; printed_abs = printed(abs)
+&gt;&gt;&gt; printed_abs(&#x2d;10)
+Result: 10
+10</code></pre>
+
+          <p>Read the docstring for <code>make_averaged</code> carefully to understand how it
+            is meant to work.</p>
+
+
+
+
+          <h3 id="problem-7-2-pt">Problem 7 </h3>
+
+
+          <p>Implement the <code>max_scoring_num_rolls</code> function, which runs an
+            experiment to determine the number of rolls (from 1 to 10) that gives
+            the maximum average score for a turn.  Your implementation should use
+            <code>make_averaged</code> and <code>roll_dice</code>.</p>
+
+          <p><strong>Note:</strong> If two numbers of rolls are tied for the maximum average
+            score, return the lower number. For example, if both 3 and 6 achieve a
+            maximum average score, return 3.</p>
+
+
+          <p>To run this experiment on randomized dice, call <code>run_experiments</code> using
+            the <code>&#x2d;r</code> option:</p>
+
+          <pre><code>python3 hog.py &#x2d;r</code></pre>
+
+          <p><strong>Running experiments</strong> For the remainder of this project,
+            you can change the implementation of <code>run_experiments</code> as you wish.
+            By calling <code>average_win_rate</code>, you can evaluate various Hog
+            strategies. For example, change the first <code>if False:</code> to <code>if
+            True:</code> in order to evaluate <code>always_roll(8)</code> against the
+            baseline strategy of <code>always_roll(5)</code>.  You should find that it loses
+            more often than it wins, giving a win rate below 0.5.</p>
+
+          <p>Some of the experiments may take up to a minute to run. You can always reduce
+            the number of samples in <code>make_averaged</code> to speed up experiments.</p>
+
+
+          <h3 id="problem-8-1-pt">Problem 8 </h3>
+
+
+          <p>A strategy can take advantage of the <em>Free bacon</em> rule by rolling 0
+            when it is most beneficial to do so.  Implement <code>bacon_strategy</code>, which
+            returns 0 whenever rolling 0 would give <strong>at least</strong> <code>margin</code> points
+            and returns <code>num_rolls</code> otherwise.</p>
+
+
+
+          <p>Once you have implemented this strategy, change <code>run_experiments</code>
+            to evaluate your new strategy against the baseline. You should find that it
+            wins more than half of the time.</p>
+
+
+          <h3 id="problem-9-2-pt">Problem 9</h3>
+
+
+          <p>A strategy can also take advantage of the <em>Swine Swap</em> rule. The
+            <code>swap_strategy</code></p>
+
+          <ol>
+            <li>Rolls 0 if it would cause a beneficial swap.</li>
+            <li>Rolls <code>num_rolls</code> if rolling 0 would cause a harmful swap in favor of the
+              opponent.</li>
+            <li>If rolling 0 does not cause a swapped, then roll 0
+              if it would give <strong>at least</strong> <code>margin</code> points and roll <code>num_rolls</code>
+              otherwise.</li>
+          </ol>
+
+          <p>(Note: if a swap would result in the scores not changing, such as both players
+            having a score of 55, it is considered to be neutral, and should be handled in
+            case 3 as if the scores had not been swapped at all)</p>
+
+
+          <p>Once you have implemented this strategy, update <code>run_experiments</code> to
+            evaluate your new strategy against the baseline.  You should find that
+            it performs even better than <code>bacon_strategy</code>, on average.</p>
+
+
+
+          <h3 id="problem-10-3-pt">Problem 10</h3>
+
+
+          <p>Implement <code>final_strategy</code>, which combines these ideas and any other ideas you
+            have to achieve a win rate of at least 0.58 (for full extra credit) against the
+            baseline <code>always_roll(5)</code> strategy.  Partial credit is also given if you are
+            close. Some ideas:</p>
+
+          <ul>
+            <li>You only need 100 points to win. If you are near the goal, try not
+              to pig out and give your opponent a chance to win.</li>
+            <li>If you are in the lead, you might take fewer risks. If you are
+              losing, you might take bigger risks to catch up.</li>
+            <li>Vary your rolls based on whether you will be rolling four-sided or
+              six-sided dice.</li>
+            <li>Find a way to leave your opponent with four-sided dice more often.</li>
+          </ul>
+
+          <p>You can check your final strategy win rate by running:</p>
+
+          <pre><code>python3 hog.py &#x2d;&#x2d;final</code></pre>
+
+
+
+          <p>You can also play against your final strategy with the graphical user
+            interface:</p>
+
+          <pre><code>python3 hog_gui.py &#x2d;f</code></pre>
+
+          <p>The GUI will alternate which player is controlled by you.</p>
+
+
+
+        </div>
+
+        <div class='col-md-3'>
+          <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+            <ul>
+              <li><a href="index.html#download-starter-files">Download starter files</a></li>
+              <li><a href="index.html#graphical-user-interface">Graphical User Interface</a></li>
+              <li><a href="index.html#phase-1-simulator">Phase 1: Simulator</a></li>
+              <ul>
+                <li><a href="index.html#problem-0-0-pt">Problem 0 (0 pt)</a></li>
+                <li><a href="index.html#problem-1-2-pt">Problem 1 (2 pt)</a></li>
+                <li><a href="index.html#problem-2-1-pt">Problem 2 (1 pt)</a></li>
+                <li><a href="index.html#problem-3-1-pt">Problem 3 (1 pt)</a></li>
+                <li><a href="index.html#problem-4-1-pt">Problem 4 (1 pt)</a></li>
+                <li><a href="index.html#problem-5-3-pt">Problem 5 (3 pt)</a></li>
+              </ul>
+
+              <li><a href="index.html#phase-2-strategies">Phase 2: Strategies</a></li>
+              <ul>
+                <li><a href="index.html#problem-6-2-pt">Problem 6 (2 pt)</a></li>
+                <li><a href="index.html#problem-7-2-pt">Problem 7 (2 pt)</a></li>
+                <li><a href="index.html#problem-8-1-pt">Problem 8 (1 pt)</a></li>
+                <li><a href="index.html#problem-9-2-pt">Problem 9 (2 pt)</a></li>
+                <li><a href="index.html#problem-10-3-pt">Problem 10 (3 pt)</a></li>
+              </ul>
+
+            </ul>
+
+          </nav>
+        </div>
+
+      </div>
+    </div>
+  </body>
+  <script>
+    $('.sidebar ul').addClass('nav nav-stacked');
+    $('body').scrollspy({
+      target: '.sidebar',
+      offset: 40
+    });
+  </script>
+
+</html>
