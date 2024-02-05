@@ -2,6 +2,8 @@
 # Phase 2: Strategies #
 #######################
 
+from dice import four_sided, six_sided, make_test_dice
+
 def always_roll(n):
     """Return a strategy that always rolls N dice.
 
