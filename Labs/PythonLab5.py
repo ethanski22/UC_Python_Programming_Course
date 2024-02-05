@@ -135,9 +135,23 @@ def middle_tweet():
     True
     """
     "*** YOUR CODE HERE ***"
-    for _ in range(5):
-        print (random_tweet())
-    return random_tweet()
+    # for _ in range(5):
+    #     print (random_tweet())
+    # return random_tweet()
+    tweets = {}
+
+    # Generate 5 random tweets
+    for i in range(5):
+        tweets[i] = random_tweet()
+
+    # Calculate the middle value of the lengths
+    middle_length = sum(len(tweet['text']) for tweet in tweets.values()) // len(tweets)
+
+    # Find the tweet closest to the middle value
+    closest_index = min(tweets, key=lambda i: abs(len(tweets[i]['text']) - middle_length))
+    closest_tweet = tweets[closest_index]
+
+    return closest_tweet
         
 
 import doctest
