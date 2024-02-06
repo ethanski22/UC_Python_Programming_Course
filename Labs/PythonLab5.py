@@ -138,20 +138,18 @@ def middle_tweet():
     # for _ in range(5):
     #     print (random_tweet())
     # return random_tweet()
-    tweets = {}
+    import random 
+	
+    lengths = []
+    for _ in range(5):
+        tweet = random_tweet()
+        lengths.append(len(tweet))
 
-    # Generate 5 random tweets
-    for i in range(5):
-        tweets[i] = random_tweet()
+    tweet_table = build_successors_table()
+    chosen_start_word = random.choice(tweet_table['.'])
+    constructed_tweet = construct_tweet(chosen_start_word, tweet_table)
 
-    # Calculate the middle value of the lengths
-    middle_length = sum(len(tweet['text']) for tweet in tweets.values()) // len(tweets)
-
-    # Find the tweet closest to the middle value
-    closest_index = min(tweets, key=lambda i: abs(len(tweets[i]['text']) - middle_length))
-    closest_tweet = tweets[closest_index]
-
-    return closest_tweet
+    return constructed_tweet
         
 
 import doctest
