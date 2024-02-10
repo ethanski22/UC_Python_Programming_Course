@@ -43,6 +43,10 @@ def make_averaged(fn, num_samples=1000):
     """
     # BEGIN Question 6
     "*** REPLACE THIS LINE ***"
+    def average(*args):
+        results = [fn(*args) for i in range(num_samples)]
+        return sum(results) / len(results)
+    return average
     # END Question 6
 
 def max_scoring_num_rolls(dice=six_sided, num_samples=1000):
@@ -56,6 +60,16 @@ def max_scoring_num_rolls(dice=six_sided, num_samples=1000):
     """
     # BEGIN Question 7
     "*** REPLACE THIS LINE ***"
+    from hog import roll_dice
+
+    rollsResult = []
+
+    for rolls in range(1, 11):
+        averagedRollDice = make_averaged(roll_dice, num_samples)
+        avgScore = averagedRollDice(rolls)
+        rollsResult.append(avgScore)
+
+    return max(rollsResult)
     # END Question 7
 
 def winner(strategy0, strategy1):
@@ -100,7 +114,10 @@ def bacon_strategy(score, opponent_score, margin=8, num_rolls=5):
     """
     # BEGIN Question 8
     "*** REPLACE THIS LINE ***"
-    return 5 # Replace this statement
+    if 1 + max((int(digit) for digit in str(opponent_score)), score // 10) >= margin:
+        return 0
+    else:
+        return num_rolls
     # END Question 8
 
 def swap_strategy(score, opponent_score, margin=8, num_rolls=5):
@@ -111,18 +128,46 @@ def swap_strategy(score, opponent_score, margin=8, num_rolls=5):
     """
     # BEGIN Question 9
     "*** REPLACE THIS LINE ***"
-    return 5 # Replace this statement
+    from hog import is_swap
+
+    if is_swap(score + 1, opponent_score):
+        return 0
+    
+    elif is_swap(score, opponent_score + 1):
+        return num_rolls
+    
+    elif 1 + max(score // 10, score % 10) >= margin:
+        return 0
+    else:
+        return num_rolls
     # END Question 9
 
 
 def final_strategy(score, opponent_score):
     """Write a brief description of your final strategy.
 
+    Check if Free bacon score is greater than or equal to 8 then
+    Check if swapping scores would be beneficial if so return 0 if not
+    Check if swapping scores would be harmful for the opponent if so return 0 if not
+    Return num_rolls
+
     *** YOUR DESCRIPTION HERE ***
     """
     # BEGIN Question 10
     "*** REPLACE THIS LINE ***"
-    return 5 # Replace this statement
+    from hog import is_swap
+    bacon_score = 1 + max(opponent_score // 10, opponent_score % 10)
+    
+    if bacon_score >= 8:
+        return 0
+    
+    if is_swap(score + bacon_score, opponent_score):
+        return 0
+    
+    if is_swap(opponent_score + bacon_score, score):
+        return 10
+    
+    return 10
     # END Question 10
 
 
