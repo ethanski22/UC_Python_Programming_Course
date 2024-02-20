@@ -30,6 +30,12 @@ class Player(object):
         You are at Swift Hall
         """
         "*** YOUR CODE HERE ***"
+        if direction in self.place.exits:
+            self.place = self.place.exit_to(direction)
+        else:
+            print("Can't go to {} from {}.".format(direction, self.place.name))
+            print("Try looking around to see where to go.")
+
 #RQ3
     def talk_to(self, person):
         """Talk to person if person is at player's current place.
@@ -45,7 +51,11 @@ class Player(object):
         """
         if type(person) != str:
             print('Person has to be a string.')
-        return None   # Replace this line
+            return
+        if person in self.place.characters:
+            print(self.place.characters[person].talk())
+        else:
+            print("{} is not here.".format(person))
 
 #RQ4
     def take(self, thing):
@@ -66,7 +76,13 @@ class Player(object):
         """
         if type(thing) != str:
             print('Thing should be a string.')
-        return None   # Replace this line
+            return
+        if thing in self.place.things:
+            item = self.place.take(thing)
+            print("{} takes the {}".format(self.name, thing))
+            self.backpack.append(item)
+        else:
+            print("{} is not here.".format(thing))
 
     def check_backpack(self):
         """Print each item with its description and return a list of item names.
@@ -220,7 +236,7 @@ game_store.add_exits([nippert])
 
 # RQ1: Game Player:
 # The Player should start at tuc.
-me = None
+me = Player('Squirrel', tuc)
 
 
 ############################################
