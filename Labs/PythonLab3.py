@@ -11,29 +11,26 @@ def doubletime(i,n):
     1024
     """
     "*** YOUR CODE HERE ***"
-
-    for j in range(0, n):
-            i = i * 2
-    return i
+    if n == 0:
+        return i
+    else:
+        return 2 * doubletime(i, n - 1)
 
 # RQ2
 def skip2_add(n):
     """ Takes a number x and returns x + x-3 + x-6 + x-9 + ... + 0.
 
-    >>> skip2_add(5)  # 5 + 2  + 0
+    >>> skip2_add(5)  # 5 + 2 + 0
     7
     >>> skip2_add(10) # 10 + 7 + 4 + 1 + 0
     22
     """
     "*** YOUR CODE HERE ***"
-    lst = []
+    if n <= 0:
+        return 0
+    else:
+        return n + skip2_add(n - 3)
 
-    for i in range(0, round(n/3) + 1):
-        if(n > 0):
-            lst.append(n)
-            n -= 3
-    return sum(lst)
-	
 # RQ3
 def a(n):
     """Return the number in the sequence defined by a(1) = 1;
@@ -50,15 +47,12 @@ def a(n):
     123
     """
     "*** YOUR CODE HERE ***"
-    lst = [1]
-
-    for i in range(2, n + 1):
-        if lst[-1] % 2 == 0:
-            lst.append((3 / 2) * lst[-1])
-        else:
-            lst.append((3 / 2) * (lst[-1] + 1))
-    
-    return int(lst[-1])
+    if n == 1:
+        return 1
+    elif a(n - 1) % 2 == 0:
+        return int(1.5 * a(n - 1))
+    else:
+        return int(1.5 * (a(n - 1) + 1))
 
 # RQ4
 def paths(m, n):
@@ -76,13 +70,11 @@ def paths(m, n):
     1
     """
     "*** YOUR CODE HERE ***"
-    lst = [[1] * n for i in range(m)]
-
-    for i in range(1, m):
-        for j in range(1, n):
-            lst[i][j] = lst[i - 1][j] + lst[i][j - 1]
-
-    return lst[-1][-1]
+    if m == 1 or n == 1:
+        return 1
+    else:
+        return paths(m - 1, n) + paths(m, n - 1)
+    
 
 import doctest
 if __name__ == "__main__":
