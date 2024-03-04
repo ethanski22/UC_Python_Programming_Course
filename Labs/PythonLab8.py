@@ -18,15 +18,21 @@ def make_pytunes(username):
           sandstorm
     """
     "*** YOUR CODE HERE ***"
-    return tree(username,
-            [tree('pop',
-                  [tree('justin bieber',
-                        [tree('single',
-                              ['what do you mean?'])]),
-                    tree('2015 pop mashup')]),
-              tree('trance',
-                  [tree('darude',
-                        ['sandstorm'])])])
+    return tree(username, [
+        tree('pop', [
+            tree('justin bieber', [
+                tree('single', [
+                    tree('what do you mean?')
+                ])
+            ]),
+            tree('2015 pop mashup')
+        ]),
+        tree('trance', [
+            tree('darude', [
+                tree('sandstorm')
+            ])
+        ])
+    ])
 
 def num_songs(t):
   """Return the number of songs in the pyTunes tree, t.
@@ -62,8 +68,8 @@ def add_song(t, song, category):
   if root(t) == category:
     return tree(root(t), branches(t) + [tree(song)])
   else:
-    new_branches = [add_song(branch, song, category) for branch in branches(t)]
-    return tree(root(t), new_branches)
+    newBranches = [add_song(branch, song, category) for branch in branches(t)]
+    return tree(root(t), newBranches)
 
 # Tree ADT
 def tree(root, branches=[]):
@@ -147,5 +153,10 @@ def delete(t, target):
   if root(t) == target:
     return None
   else:
-    new_branches = [delete(branch, target) for branch in branches(t) if root(branch) != target]
-    return tree(root(t), new_branches)
+    newBranches = [delete(branch, target) for branch in branches(t) if root(branch) != target]
+    return tree(root(t), newBranches)
+
+
+import doctest
+if __name__ == "__main__":
+  doctest.testmod(verbose=True)
