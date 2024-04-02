@@ -1,3 +1,48 @@
+# Output table
+# MedInc has R2 score: 0.45885918903846656
+#          has MSE score: 0.7091157771765549
+
+# HouseAge has R2 score: 0.012551235533311389
+#          has MSE score: 1.2939617265100323
+
+# AveRooms has R2 score: 0.013795337532284901
+#          has MSE score: 1.2923314440807299
+
+# AveBedrms has R2 score: -0.0003652108639329299
+#          has MSE score: 1.3108875538359483
+
+# Population has R2 score: 9.303316180342414e-05
+#          has MSE score: 1.3102870667503983
+
+# AveOccup has R2 score: 0.0005830567221980498
+#          has MSE score: 1.3096449354773076
+
+# Latitude has R2 score: 0.021915712646639274
+#          has MSE score: 1.281690431624196
+
+# Longitude has R2 score: 0.0017575657278725565
+#          has MSE score: 1.3081058483312469
+
+"""
+
+Summarization:
+
+Based on the output, 'MedInc' has the highest R2 score 
+and the lowest MSE among the individual features, 
+making it the most correlated feature with housing prices.
+
+The simple linear regression analysis shows that the 
+'MedInc' (Median Income) feature has the strongest correlation 
+with housing prices, as it achieved the highest R2 score of 
+approximately 0.469 and the lowest MSE of about 0.594. 
+In contrast, the other individual features like 
+'HouseAge', 'AveRooms', 'AveBedrms', 'Population', 'AveOccup', 
+'Latitude', and 'Longitude' demonstrated weaker correlations with 
+housing prices, with R2 scores close to zero and higher MSE values 
+ranging from approximately 1.329 to 1.343.
+
+"""
+
 # Import necessary libraries
 import numpy as np
 import pandas as pd
